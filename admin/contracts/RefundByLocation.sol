@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 
-contract Refund {
+contract RefundByLocation {
     struct Location {
         uint lat;
         uint lng;

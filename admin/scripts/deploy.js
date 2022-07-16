@@ -11,7 +11,13 @@ async function main() {
         "RefundByLocation"
     );
 
-    const refundByLocation = await RefundByLocation.deploy();
+    const refundByLocation = await RefundByLocation.deploy(
+        "0x8626f6940e2eb28930efb4cef49b2d1f2c9c1199",
+        "90046464",
+        "387678208",
+        "200",
+        "8"
+    );
 
     await refundByLocation.deployed();
 
