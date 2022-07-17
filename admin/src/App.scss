@@ -1,1 +1,20 @@
 @import "~bootstrap/scss/bootstrap";
+
+.App {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.balance {
+    display: flex;
+    justify-content: space-evenly;
+}

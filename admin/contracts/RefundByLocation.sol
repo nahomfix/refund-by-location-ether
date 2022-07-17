@@ -74,6 +74,7 @@ contract RefundByLocation {
         if (distance <= (radius * WEIFACTOR)) {
             uint payment = maxBalance / timeLimit;
             payable(msg.sender).transfer(payment);
+            maxBalance = maxBalance - payment;
         }
     }
 

@@ -6,8 +6,9 @@ import RefundByLocation from "./artifacts/contracts/RefundByLocation.sol/RefundB
 
 function App() {
     const [employeeAddress, setEmployeeAddress] = useState("");
+    const [balance, setBalance] = useState("");
     const [employees, setEmployees] = useState([]);
-    const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
     const connectWallet = async () => {
         try {
@@ -45,10 +46,29 @@ function App() {
         );
 
         const employees = await contract.getEmployees();
-        const b = await contract.maxBalance();
 
-        console.log(employees, b);
         setEmployees(employees);
+    };
+
+    const fetchBalance = async () => {
+        const { ethereum } = window;
+
+        if (!ethereum) {
+            alert("Please install MetaMask!");
+            return;
+        }
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(
+            contractAddress,
+            RefundByLocation.abi,
+            provider
+        );
+
+        const availableBalance = await contract.maxBalance();
+
+        setBalance(ethers.utils.formatUnits(availableBalance, "ether"));
     };
 
     const addEmployee = async () => {
@@ -112,7 +132,7 @@ function App() {
         const FACTOR = 1000000;
         navigator.geolocation.getCurrentPosition(async (position) => {
             const p = position.coords;
-            console.log(p.latitude, p.longitude);
+
             const employee = await contract.reportLocation(
                 p.latitude.toString().replace(".", ""),
                 p.longitude.toString().replace(".", "")
@@ -123,47 +143,61 @@ function App() {
 
     return (
         <div className="App">
-            <Button variant="danger" onClick={connectWallet}>
-                Connect Wallet
-            </Button>
+            <div className="controls">
+                <Button variant="danger" onClick={connectWallet}>
+                    Connect Wallet
+                </Button>
 
-            <Button variant="danger" onClick={fetchEmployees}>
-                Get
-            </Button>
+                <Button variant="danger" onClick={fetchEmployees}>
+                    Get Employees
+                </Button>
+            </div>
 
-            <input
-                value={employeeAddress}
-                onChange={(e) => setEmployeeAddress(e.target.value)}
-            ></input>
+            <div>
+                <input
+                    value={employeeAddress}
+                    onChange={(e) => setEmployeeAddress(e.target.value)}
+                ></input>
 
-            <Button variant="danger" onClick={addEmployee}>
-                Add
-            </Button>
+                <Button variant="danger" onClick={addEmployee}>
+                    Add
+                </Button>
+            </div>
 
-            <Button variant="danger" onClick={depositBalance}>
-                Deposit
-            </Button>
-
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Employee Address</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {employees.map((address) => (
-                        <tr key={address}>
-                            <td>1</td>
-                            <td>{address}</td>
+            <div>
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee Address</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                        {employees.map((address) => (
+                            <tr key={address}>
+                                <td>1</td>
+                                <td>{address}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
 
-            <Button variant="danger" onClick={logAddress}>
-                Log address
-            </Button>
+                <Button variant="danger" onClick={logAddress}>
+                    Log address
+                </Button>
+            </div>
+
+            <div className="balance">
+                <Button variant="danger" onClick={fetchBalance}>
+                    Get Balance
+                </Button>
+
+                <Button variant="danger" onClick={depositBalance}>
+                    Deposit
+                </Button>
+            </div>
+
+            <p>Current Balance: {balance} ETH</p>
         </div>
     );
 }
