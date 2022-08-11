@@ -89,7 +89,7 @@ Make sure you have node installed on local machine.
 
 4. Access the admin dashboard
     ```JS
-    Navigate to `http://localhost:5000/` on the browser
+    Navigate to `http://localhost:3000/` on the browser
     ```
 
 <!-- CONTRIBUTING -->
